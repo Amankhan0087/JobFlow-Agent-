@@ -1,0 +1,114 @@
+{
+  "name": "Your Name",
+  "email": "your.email@example.com",
+  "phone": "+1-555-0100",
+  "location": "Remote",
+  "linkedin": "linkedin.com/in/yourprofile",
+  "github": "github.com/yourprofile",
+  "website": "yourportfolio.dev",
+  "summary": "Experienced AI/ML Engineer with 5+ years designing and deploying production-grade machine learning systems. Proven track record of building LLM-powered applications, NLP pipelines, and scalable data infrastructure. Passionate about automation, open-source, and solving real-world problems with AI.",
+  "skills": [
+    "Python", "Machine Learning", "Deep Learning", "LangChain", "LangGraph",
+    "FastAPI", "Django", "Flask", "TensorFlow", "PyTorch", "Scikit-learn",
+    "Hugging Face Transformers", "OpenAI API", "Groq", "RAG Systems",
+    "Vector Databases", "Pinecone", "Weaviate", "ChromaDB",
+    "SQL", "PostgreSQL", "SQLite", "MongoDB", "Redis",
+    "Docker", "Kubernetes", "AWS", "GCP", "Azure",
+    "Git", "CI/CD", "GitHub Actions", "Linux", "REST APIs",
+    "Data Engineering", "Pandas", "NumPy", "Spark",
+    "Playwright", "Selenium", "Web Scraping", "BeautifulSoup"
+  ],
+  "experience": [
+    {
+      "title": "Senior AI/ML Engineer",
+      "company": "TechVentures Inc.",
+      "start_date": "Jan 2022",
+      "end_date": "Present",
+      "location": "Remote",
+      "responsibilities": [
+        "Architected and deployed LLM-powered document processing pipeline handling 500K+ documents/day using LangChain and GPT-4, reducing manual review time by 80%",
+        "Built a multi-agent RAG system for enterprise knowledge management, integrating Pinecone vector DB with OpenAI embeddings",
+        "Designed and maintained production FastAPI microservices serving 10M+ API requests/month with 99.9% uptime",
+        "Led migration from monolith to microservices architecture, improving system latency by 40%",
+        "Mentored team of 4 junior engineers and conducted weekly knowledge-sharing sessions on ML best practices",
+        "Implemented automated A/B testing framework for ML model evaluation, cutting experiment cycle time from 2 weeks to 3 days"
+      ]
+    },
+    {
+      "title": "Machine Learning Engineer",
+      "company": "DataSolutions Ltd.",
+      "start_date": "Mar 2020",
+      "end_date": "Dec 2021",
+      "location": "New York, NY",
+      "responsibilities": [
+        "Developed NLP models for sentiment analysis and named entity recognition achieving 94% F1 score on production data",
+        "Built end-to-end MLOps pipeline using AWS SageMaker, Docker, and GitHub Actions for automated model retraining and deployment",
+        "Created real-time recommendation engine serving 2M daily active users using collaborative filtering and deep learning",
+        "Optimized data preprocessing pipelines with PySpark, reducing batch processing time from 6 hours to 45 minutes",
+        "Collaborated with product teams to define ML requirements and translated business problems into technical specifications"
+      ]
+    },
+    {
+      "title": "Junior Data Scientist",
+      "company": "Analytics Corp.",
+      "start_date": "Jun 2018",
+      "end_date": "Feb 2020",
+      "location": "Boston, MA",
+      "responsibilities": [
+        "Built predictive models for customer churn prediction achieving 87% accuracy, saving $2M annually in customer retention costs",
+        "Automated ETL workflows using Airflow and Python, reducing data engineering overhead by 60%",
+        "Developed interactive dashboards with Plotly and Dash for executive reporting",
+        "Conducted A/B tests for pricing strategies, directly contributing to 15% revenue increase"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "M.S. Computer Science (Machine Learning Specialization)",
+      "institution": "State University",
+      "year": "2018",
+      "location": "Boston, MA",
+      "gpa": "3.9/4.0",
+      "relevant_courses": ["Advanced ML", "Deep Learning", "NLP", "Distributed Systems"]
+    },
+    {
+      "degree": "B.S. Computer Engineering",
+      "institution": "Tech University",
+      "year": "2016",
+      "location": "New York, NY",
+      "gpa": "3.7/4.0"
+    }
+  ],
+  "certifications": [
+    "AWS Certified Machine Learning Specialty",
+    "Google Cloud Professional Data Engineer",
+    "Deep Learning Specialization – Coursera (Andrew Ng)",
+    "MLOps Specialization – Coursera",
+    "LangChain for LLM Application Development – DeepLearning.AI"
+  ],
+  "projects": [
+    {
+      "name": "JobFlow Agent",
+      "description": "Open-source multi-country automated job application system using AI agents",
+      "technologies": ["Python", "FastAPI", "Playwright", "LangChain", "Groq"],
+      "url": "github.com/yourprofile/jobflow"
+    },
+    {
+      "name": "LLM Document Intelligence",
+      "description": "Production RAG system for enterprise document Q&A with 95% accuracy",
+      "technologies": ["LangChain", "Pinecone", "OpenAI", "FastAPI", "Docker"]
+    }
+  ],
+  "languages": [
+    {"language": "English", "proficiency": "Native"},
+    {"language": "Arabic", "proficiency": "Conversational"}
+  ],
+  "availability": "Immediately",
+  "visa_status": "Open to relocation and visa sponsorship",
+  "expected_salary": {
+    "UAE": "AED 15000-25000",
+    "UK": "GBP 70000-90000",
+    "SA": "SAR 18000-30000",
+    "Germany": "EUR 75000-95000"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "template_name": "default",
+  "description": "Clean professional resume template with teal accents",
+  "page_size": "letter",
+  "margins": {
+    "top": 0.6,
+    "bottom": 0.6,
+    "left": 0.8,
+    "right": 0.8
+  },
+  "fonts": {
+    "name": "Helvetica-Bold",
+    "heading": "Helvetica-Bold",
+    "body": "Helvetica",
+    "italic": "Helvetica-Oblique"
+  },
+  "font_sizes": {
+    "name": 22,
+    "section_heading": 11,
+    "body": 9.5,
+    "bullet": 9,
+    "contact": 9
+  },
+  "colors": {
+    "primary": "#2DD4BF",
+    "heading": "#1A1A3E",
+    "body": "#0D0D0D",
+    "gray": "#737373",
+    "line": "#CCCCCC"
+  },
+  "sections": [
+    "summary",
+    "skills",
+    "experience",
+    "education",
+    "certifications",
+    "projects"
+  ],
+  "show_photo": false,
+  "show_linkedin": true,
+  "show_github": true,
+  "bullet_char": "•",
+  "date_format": "MMM YYYY"
+}
