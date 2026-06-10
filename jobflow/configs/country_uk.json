@@ -1,0 +1,17 @@
+{
+  "country": "UK",
+  "currency": "GBP",
+  "salary_range": {"min": 40000, "max": 120000},
+  "job_boards": ["linkedin", "reed", "indeed", "monster", "totaljobs"],
+  "visa_required": false,
+  "accommodation_filter": false,
+  "daily_application_limit": 20,
+  "browser_profile": "uk_profile",
+  "vpn_endpoint": "",
+  "timezone": "Europe/London",
+  "language": "en",
+  "search_keywords": ["AI Engineer", "Machine Learning Engineer", "Software Engineer", "Data Scientist", "Python Developer"],
+  "excluded_companies": [],
+  "min_salary_filter": 40000,
+  "location_preferences": ["London", "Manchester", "Edinburgh", "Remote", "Hybrid"]
+}

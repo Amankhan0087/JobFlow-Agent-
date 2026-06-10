@@ -1,0 +1,17 @@
+{
+  "country": "SA",
+  "currency": "SAR",
+  "salary_range": {"min": 10000, "max": 40000},
+  "job_boards": ["linkedin", "bayt", "tanqeeb", "gulftalen"],
+  "visa_required": true,
+  "accommodation_filter": true,
+  "daily_application_limit": 15,
+  "browser_profile": "sa_profile",
+  "vpn_endpoint": "",
+  "timezone": "Asia/Riyadh",
+  "language": "en",
+  "search_keywords": ["AI Engineer", "Software Engineer", "Data Scientist", "Machine Learning"],
+  "excluded_companies": [],
+  "min_salary_filter": 10000,
+  "location_preferences": ["Riyadh", "Jeddah", "Dammam", "Remote"]
+}

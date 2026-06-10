@@ -1,0 +1,17 @@
+{
+  "country": "UAE",
+  "currency": "AED",
+  "salary_range": {"min": 8000, "max": 30000},
+  "job_boards": ["linkedin", "bayt", "gulftalen", "naukrigulf"],
+  "visa_required": true,
+  "accommodation_filter": true,
+  "daily_application_limit": 15,
+  "browser_profile": "uae_profile",
+  "vpn_endpoint": "",
+  "timezone": "Asia/Dubai",
+  "language": "en",
+  "search_keywords": ["AI Engineer", "Machine Learning", "Software Engineer", "Data Scientist"],
+  "excluded_companies": [],
+  "min_salary_filter": 8000,
+  "location_preferences": ["Dubai", "Abu Dhabi", "Sharjah", "Remote"]
+}

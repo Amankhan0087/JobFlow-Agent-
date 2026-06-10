@@ -1,0 +1,17 @@
+{
+  "country": "Germany",
+  "currency": "EUR",
+  "salary_range": {"min": 50000, "max": 130000},
+  "job_boards": ["linkedin", "stepstone", "xing", "indeed"],
+  "visa_required": false,
+  "accommodation_filter": false,
+  "daily_application_limit": 15,
+  "browser_profile": "germany_profile",
+  "vpn_endpoint": "",
+  "timezone": "Europe/Berlin",
+  "language": "en",
+  "search_keywords": ["AI Engineer", "Machine Learning Engineer", "Software Engineer", "Data Scientist", "Python Developer"],
+  "excluded_companies": [],
+  "min_salary_filter": 50000,
+  "location_preferences": ["Berlin", "Munich", "Hamburg", "Frankfurt", "Remote"]
+}
