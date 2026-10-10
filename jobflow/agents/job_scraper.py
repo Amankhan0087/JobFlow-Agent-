@@ -402,6 +402,89 @@ class JobScraper:
         return jobs
 
     # ------------------------------------------------------------------ #
+    #  Indeed scraper (UK + Germany)                                      #
+    # ------------------------------------------------------------------ #
+    def scrape_indeed(self, country_config: Dict) -> List[Dict]:
+        """Scrape Indeed for UK and Germany job listings."""
+        country = country_config["country"]
+        currency = country_config.get("currency", "GBP")
+        keywords = country_config.get("search_keywords", ["software engineer"])
+        jobs: List[Dict] = []
+
+        domain_map = {"UK": "uk.indeed.com", "Germany": "de.indeed.com"}
+        domain = domain_map.get(country, "uk.indeed.com")
+
+        for keyword in keywords[:2]:
+            try:
+                kw_enc = keyword.replace(" ", "+")
+                url = f"https://{domain}/jobs?q={kw_enc}&sort=date&fromage=1"
+                logger.info(f"Indeed scrape: {keyword} in {country}")
+                resp = self.client.get(url)
+
+                if resp.status_code != 200:
+                    logger.warning(f"Indeed returned {resp.status_code} for {keyword}")
+                    _random_delay(2, 4)
+                    continue
+
+                soup = BeautifulSoup(resp.text, "lxml")
+                job_cards = soup.select("div.job_seen_beacon") or soup.select("div[class*='cardOutline']")
+
+                for card in job_cards[:10]:
+                    try:
+                        title_el = card.select_one("h2.jobTitle") or card.select_one("[class*='jobTitle']")
+                        company_el = card.select_one("span[data-testid='company-name']") or card.select_one("[class*='companyName']")
+                        location_el = card.select_one("div[data-testid='text-location']") or card.select_one("[class*='companyLocation']")
+                        salary_el = card.select_one("div[class*='salary']") or card.select_one("[data-testid='attribute_snippet_testid']")
+                        link_el = card.select_one("a[id^='job_']") or card.select_one("a[href*='/rc/clk']") or card.select_one("a[href*='/pagead']")
+
+                        title = title_el.get_text(strip=True) if title_el else keyword
+                        company = company_el.get_text(strip=True) if company_el else "Unknown Company"
+                        location_text = location_el.get_text(strip=True) if location_el else country
+                        href = link_el["href"] if link_el and link_el.get("href") else ""
+                        if href.startswith("/"):
+                            app_url = f"https://{domain}{href}"
+                        else:
+                            app_url = href
+
+                        sal_min, sal_max = None, None
+                        if salary_el:
+                            import re
+                            sal_text = salary_el.get_text(strip=True)
+                            nums = re.findall(r"[\d,]+", sal_text)
+                            nums = [int(n.replace(",", "")) for n in nums if n.replace(",", "").isdigit() and len(n.replace(",", "")) >= 4]
+                            if len(nums) >= 2:
+                                sal_min, sal_max = nums[0], nums[1]
+                            elif len(nums) == 1:
+                                sal_min = nums[0]
+
+                        loc_type = "remote" if "remote" in location_text.lower() else ("hybrid" if "hybrid" in location_text.lower() else "onsite")
+
+                        job = _build_job(
+                            platform="indeed",
+                            country=country,
+                            job_title=title,
+                            company_name=company,
+                            job_description=f"{keyword} role at {company} – {location_text}",
+                            application_url=app_url,
+                            salary_min=sal_min,
+                            salary_max=sal_max,
+                            currency=currency,
+                            location_type=loc_type,
+                        )
+                        jobs.append(job)
+                    except Exception as e:
+                        logger.debug(f"Indeed card parse error: {e}")
+
+                _random_delay(2, 4)
+
+            except Exception as e:
+                logger.error(f"Indeed scrape error for {keyword}: {e}")
+                _random_delay(3, 6)
+
+        logger.info(f"Indeed: found {len(jobs)} jobs for {country}")
+        return jobs
+
+    # ------------------------------------------------------------------ #
     #  Save jobs to database                                              #
     # ------------------------------------------------------------------ #
     def save_jobs(self, jobs: List[Dict]) -> int:
@@ -470,6 +553,8 @@ class JobScraper:
                     country_jobs.extend(self.scrape_reed(config))
                 if code == "germany":
                     country_jobs.extend(self.scrape_stepstone(config))
+                if code in ("uk", "germany"):
+                    country_jobs.extend(self.scrape_indeed(config))
 
                 saved = self.save_jobs(country_jobs)
                 results[code] = saved
