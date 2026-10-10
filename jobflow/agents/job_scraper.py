@@ -492,6 +492,277 @@ class JobScraper:
         return jobs
 
     # ------------------------------------------------------------------ #
+    #  NaukriGulf scraper (UAE / SA)                                      #
+    # ------------------------------------------------------------------ #
+    def scrape_naukrigulf(self, country_config: Dict) -> List[Dict]:
+        """Scrape NaukriGulf for UAE and Saudi Arabia job listings."""
+        country = country_config["country"]
+        currency = country_config.get("currency", "AED")
+        keywords = country_config.get("search_keywords", ["software engineer"])
+        jobs: List[Dict] = []
+
+        location_map = {"UAE": "dubai", "SA": "riyadh"}
+        location = location_map.get(country, "dubai")
+
+        for keyword in keywords[:2]:
+            try:
+                kw_slug = keyword.lower().replace(" ", "-")
+                url = f"https://www.naukrigulf.com/{kw_slug}-jobs-in-{location}"
+                logger.info(f"NaukriGulf scrape: {keyword} in {country}")
+                resp = self.client.get(url)
+
+                if resp.status_code != 200:
+                    logger.warning(f"NaukriGulf returned {resp.status_code}")
+                    _random_delay(2, 4)
+                    continue
+
+                soup = BeautifulSoup(resp.text, "lxml")
+                job_cards = soup.select("div.ng-star-inserted article") or soup.select("[class*='job-card']") or soup.select("li.job-listing-item")
+
+                for card in job_cards[:10]:
+                    try:
+                        title_el = card.select_one("a.position-title") or card.select_one("[class*='job-title']") or card.select_one("h3")
+                        company_el = card.select_one("[class*='company-name']") or card.select_one("[class*='employer']")
+                        location_el = card.select_one("[class*='location']")
+                        salary_el = card.select_one("[class*='salary']")
+                        link_el = card.select_one("a[href*='/job']") or card.select_one("a")
+
+                        title = title_el.get_text(strip=True) if title_el else keyword
+                        company = company_el.get_text(strip=True) if company_el else "Unknown Company"
+                        location_text = location_el.get_text(strip=True) if location_el else location.title()
+                        href = link_el["href"] if link_el and link_el.get("href") else ""
+                        app_url = f"https://www.naukrigulf.com{href}" if href.startswith("/") else href
+
+                        sal_min, sal_max = None, None
+                        if salary_el:
+                            import re
+                            nums = re.findall(r"[\d,]+", salary_el.get_text())
+                            nums = [int(n.replace(",", "")) for n in nums if n.replace(",", "").isdigit()]
+                            if len(nums) >= 2:
+                                sal_min, sal_max = nums[0], nums[1]
+
+                        job = _build_job(
+                            platform="naukrigulf",
+                            country=country,
+                            job_title=title,
+                            company_name=company,
+                            job_description=f"{keyword} opportunity at {company} in {location_text}",
+                            application_url=app_url,
+                            salary_min=sal_min,
+                            salary_max=sal_max,
+                            currency=currency,
+                            visa_sponsorship=True,
+                        )
+                        jobs.append(job)
+                    except Exception as e:
+                        logger.debug(f"NaukriGulf card parse error: {e}")
+
+                _random_delay(2, 4)
+
+            except Exception as e:
+                logger.error(f"NaukriGulf scrape error: {e}")
+                _random_delay(3, 6)
+
+        logger.info(f"NaukriGulf: found {len(jobs)} jobs for {country}")
+        return jobs
+
+    # ------------------------------------------------------------------ #
+    #  GulfTalent scraper (UAE / SA)                                      #
+    # ------------------------------------------------------------------ #
+    def scrape_gulftalent(self, country_config: Dict) -> List[Dict]:
+        """Scrape GulfTalent for UAE and Saudi Arabia job listings."""
+        country = country_config["country"]
+        currency = country_config.get("currency", "AED")
+        keywords = country_config.get("search_keywords", ["software engineer"])
+        jobs: List[Dict] = []
+
+        country_map = {"UAE": "united-arab-emirates", "SA": "saudi-arabia"}
+        country_slug = country_map.get(country, "united-arab-emirates")
+
+        for keyword in keywords[:2]:
+            try:
+                kw_enc = keyword.replace(" ", "+")
+                url = f"https://www.gulftalent.com/jobs?q={kw_enc}&country={country_slug}"
+                logger.info(f"GulfTalent scrape: {keyword} in {country}")
+                resp = self.client.get(url)
+
+                if resp.status_code != 200:
+                    logger.warning(f"GulfTalent returned {resp.status_code}")
+                    _random_delay(2, 4)
+                    continue
+
+                soup = BeautifulSoup(resp.text, "lxml")
+                job_cards = soup.select("div.job_listing") or soup.select("[class*='job-item']") or soup.select("article.job")
+
+                for card in job_cards[:10]:
+                    try:
+                        title_el = card.select_one("h2.title") or card.select_one("[class*='job-title']") or card.select_one("h3")
+                        company_el = card.select_one("[class*='company']") or card.select_one("[class*='employer']")
+                        location_el = card.select_one("[class*='location']")
+                        link_el = card.select_one("a[href*='/job']") or card.select_one("a")
+
+                        title = title_el.get_text(strip=True) if title_el else keyword
+                        company = company_el.get_text(strip=True) if company_el else "Unknown Company"
+                        location_text = location_el.get_text(strip=True) if location_el else country
+                        href = link_el["href"] if link_el and link_el.get("href") else ""
+                        app_url = f"https://www.gulftalent.com{href}" if href.startswith("/") else href
+
+                        job = _build_job(
+                            platform="gulftalent",
+                            country=country,
+                            job_title=title,
+                            company_name=company,
+                            job_description=f"{keyword} role at {company} in {location_text}",
+                            application_url=app_url,
+                            currency=currency,
+                            visa_sponsorship=True,
+                        )
+                        jobs.append(job)
+                    except Exception as e:
+                        logger.debug(f"GulfTalent card parse error: {e}")
+
+                _random_delay(2, 4)
+
+            except Exception as e:
+                logger.error(f"GulfTalent scrape error: {e}")
+                _random_delay(3, 6)
+
+        logger.info(f"GulfTalent: found {len(jobs)} jobs for {country}")
+        return jobs
+
+    # ------------------------------------------------------------------ #
+    #  Tanqeeb scraper (SA)                                               #
+    # ------------------------------------------------------------------ #
+    def scrape_tanqeeb(self, country_config: Dict) -> List[Dict]:
+        """Scrape Tanqeeb for Saudi Arabia job listings."""
+        country = country_config["country"]
+        currency = country_config.get("currency", "SAR")
+        keywords = country_config.get("search_keywords", ["software engineer"])
+        jobs: List[Dict] = []
+
+        for keyword in keywords[:2]:
+            try:
+                kw_enc = keyword.replace(" ", "%20")
+                url = f"https://tanqeeb.com/jobs?q={kw_enc}&l=Saudi+Arabia"
+                logger.info(f"Tanqeeb scrape: {keyword}")
+                resp = self.client.get(url)
+
+                if resp.status_code != 200:
+                    logger.warning(f"Tanqeeb returned {resp.status_code}")
+                    _random_delay(2, 4)
+                    continue
+
+                soup = BeautifulSoup(resp.text, "lxml")
+                job_cards = soup.select("div.job-listing") or soup.select("[class*='job-card']") or soup.select("article")
+
+                for card in job_cards[:10]:
+                    try:
+                        title_el = card.select_one("h2") or card.select_one("[class*='title']")
+                        company_el = card.select_one("[class*='company']") or card.select_one("[class*='employer']")
+                        link_el = card.select_one("a[href*='/job']") or card.select_one("a")
+
+                        title = title_el.get_text(strip=True) if title_el else keyword
+                        company = company_el.get_text(strip=True) if company_el else "Unknown Company"
+                        href = link_el["href"] if link_el and link_el.get("href") else ""
+                        app_url = f"https://tanqeeb.com{href}" if href.startswith("/") else href
+
+                        job = _build_job(
+                            platform="tanqeeb",
+                            country="SA",
+                            job_title=title,
+                            company_name=company,
+                            job_description=f"{keyword} position at {company} in Saudi Arabia",
+                            application_url=app_url,
+                            currency=currency,
+                            visa_sponsorship=True,
+                        )
+                        jobs.append(job)
+                    except Exception as e:
+                        logger.debug(f"Tanqeeb card parse error: {e}")
+
+                _random_delay(2, 4)
+
+            except Exception as e:
+                logger.error(f"Tanqeeb scrape error: {e}")
+                _random_delay(3, 6)
+
+        logger.info(f"Tanqeeb: found {len(jobs)} jobs")
+        return jobs
+
+    # ------------------------------------------------------------------ #
+    #  Glassdoor scraper (USA)                                            #
+    # ------------------------------------------------------------------ #
+    def scrape_glassdoor(self, country_config: Dict) -> List[Dict]:
+        """Scrape Glassdoor for USA job listings."""
+        currency = country_config.get("currency", "USD")
+        keywords = country_config.get("search_keywords", ["software engineer"])
+        jobs: List[Dict] = []
+
+        for keyword in keywords[:2]:
+            try:
+                kw_enc = keyword.replace(" ", "-")
+                url = f"https://www.glassdoor.com/Job/{kw_enc}-jobs-SRCH_KO0,{len(keyword)}.htm?sortBy=date_desc"
+                logger.info(f"Glassdoor scrape: {keyword}")
+                resp = self.client.get(url)
+
+                if resp.status_code != 200:
+                    logger.warning(f"Glassdoor returned {resp.status_code}")
+                    _random_delay(2, 4)
+                    continue
+
+                soup = BeautifulSoup(resp.text, "lxml")
+                job_cards = soup.select("li.react-job-listing") or soup.select("[data-test='jobListing']") or soup.select("article.JobCard")
+
+                for card in job_cards[:10]:
+                    try:
+                        title_el = card.select_one("[data-test='job-title']") or card.select_one("[class*='job-title']") or card.select_one("a[class*='jobTitle']")
+                        company_el = card.select_one("[data-test='employer-name']") or card.select_one("[class*='employer']") or card.select_one("[class*='company']")
+                        location_el = card.select_one("[data-test='emp-location']") or card.select_one("[class*='location']")
+                        salary_el = card.select_one("[data-test='detailSalary']") or card.select_one("[class*='salary']")
+                        link_el = card.select_one("a[href*='/job-listing/']") or card.select_one("a[data-test='job-title']") or card.select_one("a")
+
+                        title = title_el.get_text(strip=True) if title_el else keyword
+                        company = company_el.get_text(strip=True) if company_el else "Unknown Company"
+                        location_text = location_el.get_text(strip=True) if location_el else "USA"
+                        href = link_el["href"] if link_el and link_el.get("href") else ""
+                        app_url = f"https://www.glassdoor.com{href}" if href.startswith("/") else href
+
+                        sal_min, sal_max = None, None
+                        if salary_el:
+                            import re
+                            nums = re.findall(r"[\d,]+", salary_el.get_text())
+                            nums = [int(n.replace(",", "")) for n in nums if n.replace(",", "").isdigit() and len(n.replace(",", "")) >= 4]
+                            if len(nums) >= 2:
+                                sal_min, sal_max = nums[0], nums[1]
+
+                        loc_type = "remote" if "remote" in location_text.lower() else ("hybrid" if "hybrid" in location_text.lower() else "onsite")
+
+                        job = _build_job(
+                            platform="glassdoor",
+                            country="USA",
+                            job_title=title,
+                            company_name=company,
+                            job_description=f"{keyword} at {company} – {location_text}",
+                            application_url=app_url,
+                            salary_min=sal_min,
+                            salary_max=sal_max,
+                            currency=currency,
+                            location_type=loc_type,
+                        )
+                        jobs.append(job)
+                    except Exception as e:
+                        logger.debug(f"Glassdoor card parse error: {e}")
+
+                _random_delay(2, 5)
+
+            except Exception as e:
+                logger.error(f"Glassdoor scrape error: {e}")
+                _random_delay(3, 6)
+
+        logger.info(f"Glassdoor: found {len(jobs)} jobs")
+        return jobs
+
+    # ------------------------------------------------------------------ #
     #  Save jobs to database                                              #
     # ------------------------------------------------------------------ #
     def save_jobs(self, jobs: List[Dict]) -> int:
@@ -556,12 +827,18 @@ class JobScraper:
                 # Platform-specific scrapers
                 if code in ("uae", "sa"):
                     country_jobs.extend(self.scrape_bayt(config))
+                    country_jobs.extend(self.scrape_naukrigulf(config))
+                    country_jobs.extend(self.scrape_gulftalent(config))
+                if code == "sa":
+                    country_jobs.extend(self.scrape_tanqeeb(config))
                 if code == "uk":
                     country_jobs.extend(self.scrape_reed(config))
                 if code == "germany":
                     country_jobs.extend(self.scrape_stepstone(config))
                 if code in ("uk", "germany", "uae", "sa", "usa"):
                     country_jobs.extend(self.scrape_indeed(config))
+                if code == "usa":
+                    country_jobs.extend(self.scrape_glassdoor(config))
 
                 saved = self.save_jobs(country_jobs)
                 results[code] = saved

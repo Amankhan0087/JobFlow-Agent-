@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "JobFlow Agent",
+  "version": "1.0.0",
+  "description": "1-click add any job to your JobFlow pipeline from LinkedIn, Indeed, Glassdoor, Bayt & more",
+  "permissions": ["activeTab", "storage", "notifications"],
+  "host_permissions": [
+    "https://www.linkedin.com/*",
+    "https://*.indeed.com/*",
+    "https://www.glassdoor.com/*",
+    "https://www.bayt.com/*",
+    "https://www.reed.co.uk/*",
+    "https://www.stepstone.de/*",
+    "https://www.naukrigulf.com/*",
+    "https://www.gulftalent.com/*",
+    "https://tanqeeb.com/*",
+    "http://localhost:8000/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.linkedin.com/jobs/*",
+        "https://*.indeed.com/jobs*",
+        "https://*.indeed.com/viewjob*",
+        "https://www.glassdoor.com/job-listing/*",
+        "https://www.bayt.com/en/*/jobs/*",
+        "https://www.reed.co.uk/jobs/*",
+        "https://www.stepstone.de/stellenangebote*",
+        "https://www.naukrigulf.com/*/jobs/*",
+        "https://www.gulftalent.com/jobs/*",
+        "https://tanqeeb.com/jobs/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

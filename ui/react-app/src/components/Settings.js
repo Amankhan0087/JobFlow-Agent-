@@ -121,6 +121,11 @@ export default function Settings() {
             <input type="number" min="1" max="100" value={settings.daily_application_limit || 15} onChange={e => setSettings(s => ({ ...s, daily_application_limit: parseInt(e.target.value) }))} style={S.input} />
           </div>
           <div style={S.field}>
+            <label style={S.label}>Min Match Score to Apply (0–100)</label>
+            <input type="number" min="0" max="100" value={settings.min_match_score || 60} onChange={e => setSettings(s => ({ ...s, min_match_score: parseInt(e.target.value) }))} style={S.input} />
+            <div style={{ fontSize: '11px', color: '#4B5563', marginTop: '4px' }}>Jobs below this score will be skipped</div>
+          </div>
+          <div style={S.field}>
             <label style={S.label}>Auto-Apply</label>
             <button onClick={() => setSettings(s => ({ ...s, auto_apply_enabled: !s.auto_apply_enabled }))} style={{ ...S.toggle(settings.auto_apply_enabled), width: '100%', justifyContent: 'center' }}>
               {settings.auto_apply_enabled ? '✓ Enabled' : 'Disabled'}
@@ -134,7 +139,7 @@ export default function Settings() {
         <div style={S.sectionTitle}>Run Agents Manually</div>
         <div style={S.sectionDesc}>Trigger agents on-demand</div>
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          {['scraper', 'customizer', 'bot', 'scheduler', 'followup'].map(agent => {
+          {['scraper', 'matcher', 'customizer', 'bot', 'scheduler', 'followup'].map(agent => {
             const status = agentStatus[agent]?.status;
             const running = status === 'running';
             return (

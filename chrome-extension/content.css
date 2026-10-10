@@ -1,0 +1,9 @@
+@keyframes jobflow-slide-in {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+#jobflow-add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(45, 212, 191, 0.5) !important;
+}

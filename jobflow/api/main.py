@@ -154,11 +154,54 @@ async def get_dashboard():
 #  Jobs                                                               #
 # ------------------------------------------------------------------ #
 
+@app.post("/api/jobs/add")
+async def add_job_from_extension(payload: dict = Body(...)):
+    """
+    Add a job directly from the Chrome extension (1-click add).
+    Returns {success, job_id, duplicate} so the extension can show correct state.
+    """
+    import uuid
+    from jobflow.database.db import insert_row, fetch_all
+    try:
+        app_url = payload.get("application_url", "")
+        # Duplicate check by URL
+        if app_url:
+            existing = fetch_all("SELECT id FROM jobs WHERE application_url = ?", (app_url,))
+            if existing:
+                return {"success": True, "duplicate": True, "job_id": existing[0]["id"]}
+
+        job = {
+            "id": str(uuid.uuid4()),
+            "platform": payload.get("platform", "extension"),
+            "country": payload.get("country", "UAE"),
+            "job_title": payload.get("job_title", "Unknown Role"),
+            "company_name": payload.get("company_name", "Unknown Company"),
+            "job_description": payload.get("job_description", ""),
+            "application_url": app_url,
+            "location_type": "unknown",
+            "visa_sponsorship": 0,
+            "accommodation_provided": 0,
+            "required_skills": "[]",
+            "status": "new",
+            "match_score": 0,
+        }
+        insert_row("jobs", job)
+        return {"success": True, "duplicate": False, "job_id": job["id"]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
+
 @app.get("/api/jobs")
 async def list_jobs(
     status: Optional[str] = None,
     country: Optional[str] = None,
     platform: Optional[str] = None,
+    min_score: Optional[int] = None,
     limit: int = Query(default=100, le=500),
 ):
     """List jobs with optional filters."""
@@ -174,6 +217,9 @@ async def list_jobs(
         if platform:
             conditions.append("platform = ?")
             params.append(platform)
+        if min_score is not None:
+            conditions.append("match_score >= ?")
+            params.append(min_score)
 
         where = "WHERE " + " AND ".join(conditions) if conditions else ""
         params.append(limit)
@@ -491,7 +537,7 @@ async def save_settings(payload: SettingsPayload):
 async def start_agent(payload: AgentStartPayload):
     """
     Start an agent in a background thread.
-    agent: 'scraper' | 'customizer' | 'bot' | 'scheduler' | 'followup'
+    agent: 'scraper' | 'matcher' | 'customizer' | 'bot' | 'scheduler' | 'followup'
     """
     agent_name = payload.agent.lower()
     if agent_name in agent_status and agent_status[agent_name].get("status") == "running":
@@ -511,6 +557,13 @@ async def start_agent(payload: AgentStartPayload):
                 from jobflow.agents.job_scraper import JobScraper
                 scraper = JobScraper()
                 result = scraper.run(payload.country_codes)
+                agent_status[agent_name]["result"] = result
+
+            elif agent_name == "matcher":
+                from jobflow.agents.job_matcher import JobMatcher
+                min_score = int(get_setting("min_match_score") or 60)
+                matcher = JobMatcher(min_score=min_score)
+                result = matcher.run(payload.country_codes)
                 agent_status[agent_name]["result"] = result
 
             elif agent_name == "customizer":

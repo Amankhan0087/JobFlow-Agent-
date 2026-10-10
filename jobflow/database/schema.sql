@@ -33,7 +33,9 @@ CREATE TABLE IF NOT EXISTS jobs (
     application_url TEXT,
     posted_date TEXT,
     deadline TEXT,
-    status TEXT CHECK(status IN ('new', 'scraped', 'applied', 'rejected', 'expired')) DEFAULT 'new',
+    status TEXT CHECK(status IN ('new', 'scraped', 'scored', 'low_match', 'applied', 'rejected', 'expired')) DEFAULT 'new',
+    match_score INTEGER DEFAULT 0,
+    match_details TEXT,  -- JSON: {reasons, missing, verdict}
     raw_data TEXT,  -- full JSON blob of original scrape
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
