@@ -37,7 +37,7 @@ export default function FollowUpTracker() {
     setSending(null);
   };
 
-  const FLAGS = { UAE: '🇦🇪', UK: '🇬🇧', SA: '🇸🇦', Germany: '🇩🇪' };
+  const FLAGS = { UAE: '🇦🇪', UK: '🇬🇧', SA: '🇸🇦', Germany: '🇩🇪', USA: '🇺🇸' };
   const pending = followups.filter(f => f.status === 'pending');
   const sent = followups.filter(f => f.status === 'sent');
 

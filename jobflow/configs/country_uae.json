@@ -2,7 +2,7 @@
   "country": "UAE",
   "currency": "AED",
   "salary_range": {"min": 8000, "max": 30000},
-  "job_boards": ["linkedin", "bayt", "gulftalen", "naukrigulf"],
+  "job_boards": ["linkedin", "bayt", "gulftalen", "naukrigulf", "indeed"],
   "visa_required": true,
   "accommodation_filter": true,
   "daily_application_limit": 15,

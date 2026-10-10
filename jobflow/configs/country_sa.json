@@ -2,7 +2,7 @@
   "country": "SA",
   "currency": "SAR",
   "salary_range": {"min": 10000, "max": 40000},
-  "job_boards": ["linkedin", "bayt", "tanqeeb", "gulftalen"],
+  "job_boards": ["linkedin", "bayt", "tanqeeb", "gulftalen", "indeed"],
   "visa_required": true,
   "accommodation_filter": true,
   "daily_application_limit": 15,

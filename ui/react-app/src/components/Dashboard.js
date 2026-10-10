@@ -21,7 +21,7 @@ const S = {
            status === 'offer_received' ? '#10B981' :
            status === 'rejected' ? '#EF4444' : '#6B7280',
   }),
-  flag: { UAE: '🇦🇪', UK: '🇬🇧', SA: '🇸🇦', Germany: '🇩🇪' },
+  flag: { UAE: '🇦🇪', UK: '🇬🇧', SA: '🇸🇦', Germany: '🇩🇪', USA: '🇺🇸' },
 };
 
 function StatCard({ label, value, sub, color = '#2DD4BF' }) {

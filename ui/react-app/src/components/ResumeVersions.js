@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const FLAGS = { UAE: '🇦🇪', UK: '🇬🇧', SA: '🇸🇦', Germany: '🇩🇪' };
+const FLAGS = { UAE: '🇦🇪', UK: '🇬🇧', SA: '🇸🇦', Germany: '🇩🇪', USA: '🇺🇸' };
 
 export default function ResumeVersions() {
   const [versions, setVersions] = useState([]);
@@ -31,7 +31,7 @@ export default function ResumeVersions() {
   return (
     <div>
       <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
-        {['', 'UAE', 'UK', 'SA', 'Germany'].map(c => (
+        {['', 'UAE', 'UK', 'SA', 'Germany', 'USA'].map(c => (
           <button key={c} onClick={() => setFilter(c)} style={{
             padding: '7px 16px', borderRadius: '8px', border: '1px solid',
             borderColor: filter === c ? '#2DD4BF' : '#1F2937',

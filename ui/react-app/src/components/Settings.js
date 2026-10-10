@@ -14,11 +14,11 @@ const S = {
   agentBtn: (running) => ({ padding: '9px 20px', borderRadius: '8px', border: '1px solid', borderColor: running ? '#F59E0B' : '#6366F1', background: running ? 'rgba(245,158,11,0.1)' : 'rgba(99,102,241,0.1)', color: running ? '#F59E0B' : '#6366F1', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }),
 };
 
-const COUNTRIES = ['UAE', 'UK', 'SA', 'Germany'];
-const FLAGS = { UAE: '🇦🇪', UK: '🇬🇧', SA: '🇸🇦', Germany: '🇩🇪' };
+const COUNTRIES = ['UAE', 'UK', 'SA', 'Germany', 'USA'];
+const FLAGS = { UAE: '🇦🇪', UK: '🇬🇧', SA: '🇸🇦', Germany: '🇩🇪', USA: '🇺🇸' };
 
 export default function Settings() {
-  const [settings, setSettings] = useState({ llm_provider: 'groq', active_countries: ['UAE', 'UK', 'SA', 'Germany'], daily_application_limit: 15, auto_apply_enabled: false });
+  const [settings, setSettings] = useState({ llm_provider: 'groq', active_countries: ['UAE', 'UK', 'SA', 'Germany', 'USA'], daily_application_limit: 15, auto_apply_enabled: false });
   const [groqKey, setGroqKey] = useState('');
   const [gmailUser, setGmailUser] = useState('');
   const [gmailPass, setGmailPass] = useState('');

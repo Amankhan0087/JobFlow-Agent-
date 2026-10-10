@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const FLAGS = { UAE: '🇦🇪', UK: '🇬🇧', SA: '🇸🇦', Germany: '🇩🇪' };
+const FLAGS = { UAE: '🇦🇪', UK: '🇬🇧', SA: '🇸🇦', Germany: '🇩🇪', USA: '🇺🇸' };
 const PLATFORM_ICON = { zoom: '📹', teams: '💼', google_meet: '📞', phone: '📱' };
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];

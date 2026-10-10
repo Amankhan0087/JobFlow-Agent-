@@ -127,6 +127,7 @@ class JobScraper:
             "UK": "United Kingdom",
             "SA": "Saudi Arabia",
             "Germany": "Germany",
+            "USA": "United States",
         }
         location_str = location_map.get(country, country)
 
@@ -411,8 +412,14 @@ class JobScraper:
         keywords = country_config.get("search_keywords", ["software engineer"])
         jobs: List[Dict] = []
 
-        domain_map = {"UK": "uk.indeed.com", "Germany": "de.indeed.com"}
-        domain = domain_map.get(country, "uk.indeed.com")
+        domain_map = {
+            "UK": "uk.indeed.com",
+            "Germany": "de.indeed.com",
+            "UAE": "ae.indeed.com",
+            "SA": "sa.indeed.com",
+            "USA": "www.indeed.com",
+        }
+        domain = domain_map.get(country, "www.indeed.com")
 
         for keyword in keywords[:2]:
             try:
@@ -532,7 +539,7 @@ class JobScraper:
             Dict mapping country -> number of jobs saved.
         """
         if country_codes is None:
-            country_codes = ["uae", "uk", "sa", "germany"]
+            country_codes = ["uae", "uk", "sa", "germany", "usa"]
 
         init_db()
         results: Dict[str, int] = {}
@@ -553,7 +560,7 @@ class JobScraper:
                     country_jobs.extend(self.scrape_reed(config))
                 if code == "germany":
                     country_jobs.extend(self.scrape_stepstone(config))
-                if code in ("uk", "germany"):
+                if code in ("uk", "germany", "uae", "sa", "usa"):
                     country_jobs.extend(self.scrape_indeed(config))
 
                 saved = self.save_jobs(country_jobs)

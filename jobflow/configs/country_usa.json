@@ -1,0 +1,21 @@
+{
+  "country": "USA",
+  "currency": "USD",
+  "salary_range": {"min": 80000, "max": 200000},
+  "job_boards": ["linkedin", "indeed", "glassdoor"],
+  "visa_required": false,
+  "accommodation_filter": false,
+  "daily_application_limit": 20,
+  "browser_profile": "usa_profile",
+  "vpn_endpoint": "",
+  "timezone": "America/New_York",
+  "language": "en",
+  "search_keywords": ["AI Engineer", "Machine Learning Engineer", "Software Engineer", "Data Scientist", "ML Engineer"],
+  "excluded_companies": [],
+  "min_salary_filter": 80000,
+  "location_preferences": ["New York", "San Francisco", "Seattle", "Austin", "Remote"],
+  "scrape_settings": {
+    "delay_min": 2.0,
+    "delay_max": 4.0
+  }
+}

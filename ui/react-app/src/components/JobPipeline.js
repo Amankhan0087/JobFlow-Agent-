@@ -9,7 +9,7 @@ const COLUMNS = [
   { key: 'rejected', label: 'Rejected', color: '#EF4444' },
 ];
 
-const FLAGS = { UAE: '🇦🇪', UK: '🇬🇧', SA: '🇸🇦', Germany: '🇩🇪' };
+const FLAGS = { UAE: '🇦🇪', UK: '🇬🇧', SA: '🇸🇦', Germany: '🇩🇪', USA: '🇺🇸' };
 
 function JobCard({ app }) {
   const daysSince = app.applied_at
