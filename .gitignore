@@ -31,3 +31,4 @@ ui/react-app/build/
 .DS_Store
 Thumbs.db
 .env.local
+backups/
