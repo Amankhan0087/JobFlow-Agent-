@@ -49,14 +49,18 @@ const PLATFORMS = {
     extract: () => ({
       job_title: qs('[data-testid="jobsearch-JobInfoHeader-title"]')?.innerText?.trim()
         || qs("h1.jobsearch-JobInfoHeader-title")?.innerText?.trim()
+        || qs("h2.jobsearch-JobInfoHeader-title")?.innerText?.trim()
         || qs("h1[class*='jobTitle']")?.innerText?.trim()
+        || qs("h2[class*='jobTitle']")?.innerText?.trim()
+        || qs("[class*='jobsearch-JobInfoHeader-title']")?.innerText?.trim()
         || qs(".jobsearch-JobInfoHeader-title")?.innerText?.trim()
+        || qs("h2[class*='title']")?.innerText?.trim()
         || qs("h1")?.innerText?.trim()
-        || document.title?.split(" - ")?.[0]?.trim() || "",
+        || qs("h2")?.innerText?.trim() || "",
       company_name: qs('[data-testid="inlineHeader-companyName"]')?.innerText?.trim()
         || qs(".jobsearch-InlineCompanyRating-companyName")?.innerText?.trim()
         || qs("[class*='companyName']")?.innerText?.trim()
-        || document.title?.split(" - ")?.[1]?.trim() || "",
+        || qs('[data-testid="inlineHeader-companyName"] a')?.innerText?.trim() || "",
       location: qs('[data-testid="job-location"]')?.innerText?.trim()
         || qs("[class*='jobLocation']")?.innerText?.trim() || "",
       job_description: qs("#jobDescriptionText")?.innerText?.trim()?.slice(0, 2000)
