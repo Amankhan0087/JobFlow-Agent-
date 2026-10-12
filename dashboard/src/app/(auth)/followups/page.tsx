@@ -60,7 +60,7 @@ export default function FollowUpsPage() {
         </div>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: 11, color: overdue ? "#EF4444" : "#6B7280", marginBottom: 8 }}>
-            {new Date(f.scheduled_at).toLocaleDateString()}
+            {new Date(f.scheduled_at).toLocaleDateString("en-GB")}
           </div>
           {f.status === "pending" ? (
             <button onClick={() => send(f.id)} disabled={sending === f.id} style={{ padding: "7px 16px", borderRadius: 7, border: "none", background: sending === f.id ? "#374151" : "#2DD4BF", color: sending === f.id ? "#9CA3AF" : "#0A0F1E", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>

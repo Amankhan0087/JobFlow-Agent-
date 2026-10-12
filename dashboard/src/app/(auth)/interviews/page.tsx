@@ -33,10 +33,10 @@ export default async function InterviewsPage() {
               </div>
               <div style={{ textAlign: "right" }}>
                 <div style={{ fontSize: 14, fontWeight: 600, color: "#2DD4BF" }}>
-                  {new Date(iv.scheduled_at).toLocaleDateString()}
+                  {new Date(iv.scheduled_at).toLocaleDateString("en-GB")}
                 </div>
                 <div style={{ fontSize: 12, color: "#6B7280", marginTop: 2 }}>
-                  {new Date(iv.scheduled_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  {new Date(iv.scheduled_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
                 </div>
                 {iv.meeting_link && (
                   <a href={iv.meeting_link} target="_blank" rel="noreferrer"

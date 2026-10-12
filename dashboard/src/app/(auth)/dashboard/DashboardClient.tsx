@@ -98,7 +98,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
                   <div style={{ fontSize: 11, color: "#6B7280" }}>{iv.job_title} · {iv.platform}</div>
                 </div>
                 <div style={{ fontSize: 11, color: "#2DD4BF" }}>
-                  {new Date(iv.scheduled_at).toLocaleDateString()}
+                  {new Date(iv.scheduled_at).toLocaleDateString("en-GB")}
                 </div>
               </div>
             ))
