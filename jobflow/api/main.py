@@ -292,6 +292,31 @@ async def list_applications(
             else:
                 kanban_columns.setdefault(col, []).append(app)
 
+        # Include scraped jobs (status='new') from jobs table in the "new" column
+        scraped_jobs = fetch_all("""
+            SELECT id, job_title, company_name, platform, country,
+                   salary_min, salary_max, currency, application_url, created_at
+            FROM jobs
+            WHERE status = 'new'
+            ORDER BY created_at DESC
+            LIMIT 200
+        """)
+        for job in scraped_jobs:
+            kanban_columns["new"].append({
+                "id": f"job_{job['id']}",
+                "job_title": job.get("job_title") or "Unknown Role",
+                "company_name": job.get("company_name") or "Unknown Company",
+                "platform": job.get("platform") or "extension",
+                "country": job.get("country") or "UAE",
+                "salary_min": job.get("salary_min"),
+                "salary_max": job.get("salary_max"),
+                "currency": job.get("currency"),
+                "application_url": job.get("application_url"),
+                "applied_at": job.get("created_at"),
+                "status": "new",
+                "_source": "jobs",
+            })
+
         return {
             "applications": apps,
             "total": len(apps),
