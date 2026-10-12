@@ -16,6 +16,9 @@ const PLATFORMS = {
         || qs(".job-details-jobs-unified-top-card__job-title")?.innerText?.trim()
         || qs("h1.t-24")?.innerText?.trim()
         || qs(".jobs-unified-top-card__job-title")?.innerText?.trim()
+        || qs(".t-24.t-bold")?.innerText?.trim()
+        || qs(".jobs-details-top-card__job-title")?.innerText?.trim()
+        || document.title?.split(" | ")?.[0]?.trim()
         || qs("h1")?.innerText?.trim() || "",
       company_name: qs(".job-details-jobs-unified-top-card__company-name a")?.innerText?.trim()
         || qs(".job-details-jobs-unified-top-card__company-name")?.innerText?.trim()

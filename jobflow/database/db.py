@@ -47,6 +47,26 @@ def init_db() -> None:
         else:
             logger.warning(f"Schema file not found at {SCHEMA_PATH}")
 
+        # Auto-migrate: add any missing columns to existing tables
+        _run_auto_migrations(conn)
+
+
+def _run_auto_migrations(conn: sqlite3.Connection) -> None:
+    """Add missing columns to existing tables without losing data."""
+    migrations = [
+        ("jobs", "match_score", "INTEGER DEFAULT 0"),
+        ("jobs", "match_details", "TEXT"),
+        ("jobs", "source", "TEXT"),
+        ("jobs", "application_url", "TEXT"),
+    ]
+    for table, column, col_def in migrations:
+        try:
+            conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {col_def}")
+            conn.commit()
+            logger.info(f"Auto-migration: added {table}.{column}")
+        except sqlite3.OperationalError:
+            pass  # Column already exists — skip
+
 
 def run_migrations() -> None:
     """Run any pending migration files in order."""
