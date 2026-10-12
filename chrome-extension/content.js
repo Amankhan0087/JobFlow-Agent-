@@ -48,42 +48,64 @@ const PLATFORMS = {
     match: () => location.hostname.includes("indeed.com"),
     extract: () => ({
       job_title: qs('[data-testid="jobsearch-JobInfoHeader-title"]')?.innerText?.trim()
-        || qs("h1.jobsearch-JobInfoHeader-title")?.innerText?.trim() || "",
+        || qs("h1.jobsearch-JobInfoHeader-title")?.innerText?.trim()
+        || qs("h1[class*='jobTitle']")?.innerText?.trim()
+        || qs(".jobsearch-JobInfoHeader-title")?.innerText?.trim()
+        || qs("h1")?.innerText?.trim()
+        || document.title?.split(" - ")?.[0]?.trim() || "",
       company_name: qs('[data-testid="inlineHeader-companyName"]')?.innerText?.trim()
-        || qs(".jobsearch-InlineCompanyRating-companyName")?.innerText?.trim() || "",
-      location: qs('[data-testid="job-location"]')?.innerText?.trim() || "",
-      job_description: qs("#jobDescriptionText")?.innerText?.trim()?.slice(0, 2000) || "",
+        || qs(".jobsearch-InlineCompanyRating-companyName")?.innerText?.trim()
+        || qs("[class*='companyName']")?.innerText?.trim()
+        || document.title?.split(" - ")?.[1]?.trim() || "",
+      location: qs('[data-testid="job-location"]')?.innerText?.trim()
+        || qs("[class*='jobLocation']")?.innerText?.trim() || "",
+      job_description: qs("#jobDescriptionText")?.innerText?.trim()?.slice(0, 2000)
+        || qs("[class*='jobDescription']")?.innerText?.trim()?.slice(0, 2000) || "",
       application_url: location.href,
       platform: "indeed",
     }),
     insertTarget: () => qs(".jobsearch-JobInfoHeader-title-container")
-      || qs('[data-testid="jobsearch-JobInfoHeader-title"]')?.closest("div"),
+      || qs('[data-testid="jobsearch-JobInfoHeader-title"]')?.closest("div")
+      || qs("h1")?.closest("div"),
   },
 
   glassdoor: {
     match: () => location.hostname.includes("glassdoor.com"),
     extract: () => ({
-      job_title: qs('[data-test="job-title"]')?.innerText?.trim() || qs("h1")?.innerText?.trim() || "",
-      company_name: qs('[data-test="employer-name"]')?.innerText?.trim() || "",
-      location: qs('[data-test="emp-location"]')?.innerText?.trim() || "",
-      job_description: qs(".jobDescriptionContent")?.innerText?.trim()?.slice(0, 2000) || "",
+      job_title: qs('[data-test="job-title"]')?.innerText?.trim()
+        || qs("h1[class*='job-title']")?.innerText?.trim()
+        || qs("h1")?.innerText?.trim()
+        || document.title?.split(" - ")?.[0]?.trim() || "",
+      company_name: qs('[data-test="employer-name"]')?.innerText?.trim()
+        || qs("[class*='employer-name']")?.innerText?.trim()
+        || document.title?.split(" - ")?.[1]?.trim() || "",
+      location: qs('[data-test="emp-location"]')?.innerText?.trim()
+        || qs("[class*='location']")?.innerText?.trim() || "",
+      job_description: qs(".jobDescriptionContent")?.innerText?.trim()?.slice(0, 2000)
+        || qs("[class*='desc']")?.innerText?.trim()?.slice(0, 2000) || "",
       application_url: location.href,
       platform: "glassdoor",
     }),
-    insertTarget: () => qs('[data-test="job-title"]')?.closest("div"),
+    insertTarget: () => qs('[data-test="job-title"]')?.closest("div") || qs("h1")?.closest("div"),
   },
 
   bayt: {
     match: () => location.hostname.includes("bayt.com"),
     extract: () => ({
-      job_title: qs("h1.jb-title")?.innerText?.trim() || qs("h1")?.innerText?.trim() || "",
-      company_name: qs("[class*='company-name']")?.innerText?.trim() || "",
+      job_title: qs("h1.jb-title")?.innerText?.trim()
+        || qs("h1[class*='title']")?.innerText?.trim()
+        || qs("h1")?.innerText?.trim()
+        || document.title?.split(" - ")?.[0]?.trim() || "",
+      company_name: qs("[class*='company-name']")?.innerText?.trim()
+        || qs("[class*='company']")?.innerText?.trim()
+        || document.title?.split(" at ")?.[1]?.split(" - ")?.[0]?.trim() || "",
       location: qs("[class*='location']")?.innerText?.trim() || "",
-      job_description: qs("[class*='job-description']")?.innerText?.trim()?.slice(0, 2000) || "",
+      job_description: qs("[class*='job-description']")?.innerText?.trim()?.slice(0, 2000)
+        || qs("[class*='description']")?.innerText?.trim()?.slice(0, 2000) || "",
       application_url: location.href,
       platform: "bayt",
     }),
-    insertTarget: () => qs("h1.jb-title")?.closest("div") || qs(".jb-header"),
+    insertTarget: () => qs("h1.jb-title")?.closest("div") || qs(".jb-header") || qs("h1")?.closest("div"),
   },
 
   reed: {
