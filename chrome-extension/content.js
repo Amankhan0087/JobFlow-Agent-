@@ -12,17 +12,33 @@ const PLATFORMS = {
   linkedin: {
     match: () => location.hostname.includes("linkedin.com"),
     extract: () => ({
-      job_title: qs(".job-details-jobs-unified-top-card__job-title")?.innerText?.trim()
-        || qs("h1.t-24")?.innerText?.trim() || "",
-      company_name: qs(".job-details-jobs-unified-top-card__company-name")?.innerText?.trim()
+      job_title: qs(".job-details-jobs-unified-top-card__job-title h1")?.innerText?.trim()
+        || qs(".job-details-jobs-unified-top-card__job-title")?.innerText?.trim()
+        || qs("h1.t-24")?.innerText?.trim()
+        || qs(".jobs-unified-top-card__job-title")?.innerText?.trim()
+        || qs("h1")?.innerText?.trim() || "",
+      company_name: qs(".job-details-jobs-unified-top-card__company-name a")?.innerText?.trim()
+        || qs(".job-details-jobs-unified-top-card__company-name")?.innerText?.trim()
+        || qs(".jobs-unified-top-card__company-name a")?.innerText?.trim()
         || qs(".topcard__org-name-link")?.innerText?.trim() || "",
-      location: qs(".job-details-jobs-unified-top-card__bullet")?.innerText?.trim() || "",
-      job_description: qs(".jobs-description__content")?.innerText?.trim()?.slice(0, 2000) || "",
+      location: qs(".job-details-jobs-unified-top-card__bullet")?.innerText?.trim()
+        || qs(".jobs-unified-top-card__bullet")?.innerText?.trim() || "",
+      job_description: qs(".jobs-description__content")?.innerText?.trim()?.slice(0, 2000)
+        || qs(".jobs-description")?.innerText?.trim()?.slice(0, 2000) || "",
       application_url: location.href,
       platform: "linkedin",
     }),
-    insertTarget: () => qs(".job-details-jobs-unified-top-card__primary-description-container")
-      || qs(".jobs-apply-button--top-card"),
+    insertTarget: () => {
+      // Try multiple known LinkedIn selectors (LinkedIn changes DOM often)
+      return qs(".job-details-jobs-unified-top-card__primary-description-container")
+        || qs(".jobs-unified-top-card__content--two-pane")
+        || qs(".jobs-apply-button--top-card")?.closest(".jobs-s-apply")
+        || qs(".jobs-apply-button--top-card")?.parentElement
+        || qs(".job-details-jobs-unified-top-card__job-title")?.closest("div")
+        || qs(".jobs-unified-top-card__job-title")?.closest("div")
+        || qs(".jobs-details__main-content")
+        || qs("h1")?.closest("div");
+    },
   },
 
   indeed: {
@@ -163,8 +179,19 @@ function createButton(state = "idle") {
 function injectButton(platform) {
   if (document.getElementById("jobflow-add-btn")) return;
 
-  const target = platform.insertTarget();
-  if (!target) return;
+  let target = platform.insertTarget();
+
+  // Fallback: inject as floating button if no DOM target found
+  if (!target) {
+    const floating = document.createElement("div");
+    floating.id = "jobflow-floating";
+    Object.assign(floating.style, {
+      position: "fixed", bottom: "80px", right: "20px",
+      zIndex: "999999", display: "flex", flexDirection: "column", alignItems: "flex-end",
+    });
+    document.body.appendChild(floating);
+    target = floating;
+  }
 
   const btn = createButton("idle");
 
